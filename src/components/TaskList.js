@@ -2,33 +2,18 @@ import React, { useState } from "react";
 import Task from "./Task";
 
 function TaskList(props) {
-  const { todos, displayedCategories } = props;
-
-  const nextID = (
-    (id) => () =>
-      id++
-  )(0);
-
-  const myTodos = todos.map((todo) => {
-    return {
-      id: nextID(),
-      text: todo.text,
-      category: todo.category,
-    };
-  });
-
-  const [todoList, updateTodoList] = useState(myTodos);
+  const { todos, displayedCategories, callBack } = props;
 
   const deleteTodo = (id) => {
-    const newTodos = todoList.filter((todo) => {
+    const newTodos = todos.filter((todo) => {
       return todo.id !== id;
     });
 
-    updateTodoList(newTodos);
+    callBack(newTodos);
   };
 
   const displayEntireList = () => {
-    return todoList.map((todo) => {
+    return todos.map((todo) => {
       return <Task key={todo.id} callBack={deleteTodo} task={todo} />;
     });
   };
@@ -42,7 +27,7 @@ function TaskList(props) {
       return displayEntireList();
     }
 
-    return todoList.map((todo) => {
+    return todos.map((todo) => {
       if (
         displayedCategories.findIndex((el) => checkDisplayed(el, todo)) >= 0
       ) {

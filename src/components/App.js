@@ -9,6 +9,11 @@ console.log({ CATEGORIES, TASKS });
 
 function App() {
 
+  const nextID = (
+    (id) => () =>
+      id++
+  )(0);
+
   const buttonSelection = CATEGORIES.map((currCategory) => {
     return {
       category: currCategory,
@@ -16,7 +21,16 @@ function App() {
     };
   });
 
+  const myTodos = TASKS.map((todo) => {
+    return {
+      id: nextID(),
+      text: todo.text,
+      category: todo.category,
+    };
+  });
+
   const [currentCategories, changeCategories] = useState(buttonSelection);
+  const [taskList, updateTaskList] = useState(myTodos);
 
   const handleSelection = (e) => {
     let newArray = [...currentCategories];
@@ -33,8 +47,8 @@ function App() {
     <div className="App">
       <h2>My tasks</h2>
       <CategoryFilter categories={currentCategories} callBack={handleSelection}/>
-      <NewTaskForm />
-      <TaskList todos={TASKS} displayedCategories={currentCategories}/>
+      <NewTaskForm todos={taskList} categories={CATEGORIES} callBack={updateTaskList} nextID={nextID}/>
+      <TaskList todos={taskList} displayedCategories={currentCategories} callBack={updateTaskList}/>
     </div>
   );
 }
